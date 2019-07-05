@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table id="todos" class="table table-stripped">
+        <thead>
+            <tr>
+                <th>Nazwa zadania</th>
+                <th>Opcje</th>
+            </tr>
+            <tbody>
+                {% for todo in todos %}
+                <tr>
+                    <td>{{ todo.title }}</td>
+                    <td>
+                        <a href="/todo/show/{{ todo.id }}" class="btn btn-info">Pokaż</a>
+                        <a href="#" class="btn btn-danger delete-todo" data-id="{{ todo.id }}">Usuń</a>
+                        <a href="/todo/edit/{{ todo.id }}" class="btn btn-dark">Edytuj</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </thead>
+    </table>
+    <div class="text-right">
+    <a href="/todo/create" class="btn btn-info">Dodaj zadanie</a>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        const todos = document.getElementById('todos');
+        if(todos) {
+            todos.addEventListener('click', e => {
+                if(e.target.className === 'btn btn-danger delete-todo') {
+                    if(confirm("Czy jesteś pewien że chcesz to usunąć?")) {
+
+
+                    const id = e.target.getAttribute('data-id');
+                    fetch(`/todo/delete/${id}`, {
+                        method: 'DELETE'
+                    }).then(res => window.location.reload());
+                }}
+            })
+        }
+    </script>
+{% endblock %}
